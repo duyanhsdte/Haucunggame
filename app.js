@@ -98,8 +98,8 @@ Hãy đóng vai người quản trò. Phân tích ý định và tác động c�
      contents:[{role:"user",parts:[{text:prompt}]}],
      generationConfig:{
        temperature:0.9,
-       responseMimeType:"application/json",
-       responseSchema:{
+       response_mime_type:"application/json",
+       response_schema:{
          type:"OBJECT",
          properties:{
            affection_delta:{type:"INTEGER"},
