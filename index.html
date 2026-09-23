@@ -27,5 +27,64 @@
 <aside class="panel result-panel"><div class="section-title">AI phân tích</div><div id="analysis" class="analysis empty">Kết quả lượt chơi sẽ xuất hiện ở đây.</div><div class="section-title history-title">Lịch sử</div><div id="history" class="history"></div></aside>
 </main></div>
 <div id="rankModal" class="modal hidden"><div class="modal-card"><button id="closeRankModal" class="modal-close">×</button><span class="eyebrow">SẮC PHONG</span><h2 id="rankModalTitle">Phong tước</h2><p id="rankModalDesc" class="muted">Chọn phẩm vị muốn ban.</p><div id="rankOptions" class="rank-options"></div></div></div>
+<div id="errorOverlay" class="error-overlay hidden">
+  <div class="error-box">
+    <div class="error-head">
+      <div>
+        <span class="eyebrow">DEBUG CONSOLE</span>
+        <h2>Game gặp lỗi</h2>
+      </div>
+      <button id="closeError" class="error-close">×</button>
+    </div>
+    <p class="error-help">Copy toàn bộ nội dung bên dưới và gửi cho mình. Mình sẽ đọc lỗi và sửa trực tiếp.</p>
+    <textarea id="errorText" readonly></textarea>
+    <div class="error-actions">
+      <button id="copyError" class="gold-btn">📋 Copy lỗi</button>
+      <button id="clearError" class="ghost-btn">Xóa lỗi</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var overlay=document.getElementById("errorOverlay");
+  var box=document.getElementById("errorText");
+  var close=document.getElementById("closeError");
+  var copy=document.getElementById("copyError");
+  var clear=document.getElementById("clearError");
+  var errors=[];
+  function show(label,detail){
+    var msg="["+label+"]\n"+detail;
+    errors.push(msg);
+    box.value=errors.join("\n\n------------------------------\n\n");
+    overlay.classList.remove("hidden");
+  }
+  window.addEventListener("error",function(e){
+    show("JavaScript Error",
+      "Message: "+(e.message||"Unknown error")+
+      "\nFile: "+(e.filename||"Unknown")+
+      "\nLine: "+(e.lineno||"?")+
+      "\nColumn: "+(e.colno||"?")+
+      "\nStack: "+(e.error&&e.error.stack?e.error.stack:"Không có stack"));
+  });
+  window.addEventListener("unhandledrejection",function(e){
+    var r=e.reason;
+    show("Unhandled Promise Rejection",
+      r&&r.stack?r.stack:(r&&r.message?r.message:String(r)));
+  });
+  close.onclick=function(){overlay.classList.add("hidden")};
+  clear.onclick=function(){errors=[];box.value="";overlay.classList.add("hidden")};
+  copy.onclick=async function(){
+    try{
+      await navigator.clipboard.writeText(box.value);
+      copy.textContent="✅ Đã copy";
+      setTimeout(function(){copy.textContent="📋 Copy lỗi"},1500);
+    }catch(err){
+      box.select();document.execCommand("copy");
+      copy.textContent="✅ Đã copy";
+      setTimeout(function(){copy.textContent="📋 Copy lỗi"},1500);
+    }
+  };
+})();
+</script>
 <script src="config.js"></script><script src="characters.js"></script><script src="memory.js"></script><script src="app.js"></script>
 </body></html>
