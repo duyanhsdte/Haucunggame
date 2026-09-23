@@ -153,15 +153,44 @@ async function analyzeWithGemini(text,card){
  "\n\nLịch sử gần đây:\n"+JSON.stringify(s.aiHistory.slice(-8))+
  "\n\nHãy đóng vai Game Master. Phân tích ý định và tác động hợp lý với tính cách, phẩm vị, lịch sử và bối cảnh. Cho phép điểm âm. Không tự ý kết thúc câu chuyện.";
  const response=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(GEMINI_MODEL)+":generateContent",{
-  method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},
-  body:JSON.stringify({systemInstruction:{parts:[{text:"Bạn là AI Game Master cho game Hậu Cung. Trả JSON đúng schema, ngắn gọn, bằng tiếng Việt. NPC nhất quán và có cảm xúc tự nhiên."}]},
-  contents:[{role:"user",parts:[{text:prompt}]}],generationConfig:{temperature:.9,response_mime_type:"application/json",response_schema:{
-   type:"OBJECT",properties:{
-    affection_delta:{type:"INTEGER"},trust_delta:{type:"INTEGER"},respect_delta:{type:"INTEGER"},intimacy_delta:{type:"INTEGER"},curiosity_delta:{type:"INTEGER"},
-    intent:{type:"STRING"},note:{type:"STRING"},reply:{type:"STRING"},event:{type:"STRING"},
-    memory_updates:{type:"ARRAY",items:{type:"OBJECT",properties:{text:{type:"STRING"},importance:{type:"INTEGER"}},required:["text","importance"]}}
-   },required:["affection_delta","trust_delta","respect_delta","intimacy_delta","curiosity_delta","intent","note","reply","event","memory_updates"]
-  }}}}
+  method:"POST",
+  headers:{"Content-Type":"application/json","x-goog-api-key":key},
+  body:JSON.stringify({
+   systemInstruction:{
+    parts:[{text:"Bạn là AI Game Master cho game Hậu Cung. Trả JSON đúng schema, ngắn gọn, bằng tiếng Việt. NPC nhất quán và có cảm xúc tự nhiên."}]
+   },
+   contents:[{role:"user",parts:[{text:prompt}]}],
+   generationConfig:{
+    temperature:.9,
+    response_mime_type:"application/json",
+    response_schema:{
+     type:"OBJECT",
+     properties:{
+      affection_delta:{type:"INTEGER"},
+      trust_delta:{type:"INTEGER"},
+      respect_delta:{type:"INTEGER"},
+      intimacy_delta:{type:"INTEGER"},
+      curiosity_delta:{type:"INTEGER"},
+      intent:{type:"STRING"},
+      note:{type:"STRING"},
+      reply:{type:"STRING"},
+      event:{type:"STRING"},
+      memory_updates:{
+       type:"ARRAY",
+       items:{
+        type:"OBJECT",
+        properties:{
+         text:{type:"STRING"},
+         importance:{type:"INTEGER"}
+        },
+        required:["text","importance"]
+       }
+      }
+     },
+     required:["affection_delta","trust_delta","respect_delta","intimacy_delta","curiosity_delta","intent","note","reply","event","memory_updates"]
+    }
+   }
+  })
  });
  if(!response.ok){const body=await response.text();throw new Error("Gemini "+response.status+": "+body.slice(0,300))}
  const data=await response.json(),raw=data.candidates?.[0]?.content?.parts?.map(function(p){return p.text||""}).join("")||"";
