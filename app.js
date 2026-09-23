@@ -161,7 +161,7 @@ async function analyzeWithGemini(text,card){
     intent:{type:"STRING"},note:{type:"STRING"},reply:{type:"STRING"},event:{type:"STRING"},
     memory_updates:{type:"ARRAY",items:{type:"OBJECT",properties:{text:{type:"STRING"},importance:{type:"INTEGER"}},required:["text","importance"]}}
    },required:["affection_delta","trust_delta","respect_delta","intimacy_delta","curiosity_delta","intent","note","reply","event","memory_updates"]
-  }}}
+  }}}}
  });
  if(!response.ok){const body=await response.text();throw new Error("Gemini "+response.status+": "+body.slice(0,300))}
  const data=await response.json(),raw=data.candidates?.[0]?.content?.parts?.map(function(p){return p.text||""}).join("")||"";
