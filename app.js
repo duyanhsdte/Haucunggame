@@ -68,11 +68,20 @@ async function analyzeWithGemini(text,card){
  const key=getApiKey();
  if(!key) throw new Error("NO_API_KEY");
  const cardInfo=CARDS.find(x=>x.id===card);
+ const character=CHARACTER_DATABASE.mo_dung_yen;
+ const longMemory=memoryForAI(character.id);
  const recent=state.aiHistory.slice(-8);
  const prompt=`
+CANON NHÂN VẬT:
+${JSON.stringify(character)}
+
+BỘ NHỚ DÀI HẠN:
+${JSON.stringify(longMemory)}
+
 Người chơi đang nhập vai một vị hoàng đế trong game hậu cung lịch sử giả tưởng.
 NPC hiện tại: Mộ Dung Yên.
-Tính cách: điềm tĩnh, lý trí, quan sát sắc bén, kín đáo, có lòng tự trọng; thích văn thư, calligraphy, sách vở và muốn có giá trị riêng ngoài gia đình.
+Không được trái với CANON NHÂN VẬT và BỘ NHỚ DÀI HẠN ở trên.
+
 Bối cảnh hiện tại: một cuộc trò chuyện riêng trong cung.
 
 Thẻ hành động: ${cardInfo.name} — ${cardInfo.desc}
@@ -110,9 +119,12 @@ Hãy đóng vai người quản trò. Phân tích ý định và tác động c�
            intent:{type:"STRING"},
            note:{type:"STRING"},
            reply:{type:"STRING"},
-           event:{type:"STRING"}
+           event:{type:"STRING"},
+           memory_updates:{type:"ARRAY",items:{type:"OBJECT",properties:{
+             text:{type:"STRING"},importance:{type:"INTEGER"}
+           },required:["text","importance"]}}
          },
-         required:["affection_delta","trust_delta","respect_delta","intimacy_delta","curiosity_delta","intent","note","reply","event"]
+         required:["affection_delta","trust_delta","respect_delta","intimacy_delta","curiosity_delta","intent","note","reply","event","memory_updates"]
        }
      }
    })
@@ -136,7 +148,8 @@ Hãy đóng vai người quản trò. Phân tích ý định và tác động c�
    intent:parsed.intent||"Hành động có chủ đích",
    note:parsed.note||"",
    reply:parsed.reply||"Mộ Dung Yên im lặng suy nghĩ.",
-   event:parsed.event||null
+   event:parsed.event||null,
+   memory_updates:Array.isArray(parsed.memory_updates)?parsed.memory_updates:[]
  };
 }
 
@@ -181,6 +194,7 @@ async function submitAction(text,card){
  }
  addMessage("npc","Mộ Dung Yên",result.reply);
  applyResult(result);
+ addCharacterMemories("mo_dung_yen",result.memory_updates,state.turn);
  renderAnalysis(result,card);
  state.history.unshift({turn:state.turn,card:CARDS.find(x=>x.id===card).name,text});
  state.aiHistory.push({role:"player",card,text,result});
