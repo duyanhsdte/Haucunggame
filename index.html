@@ -1,71 +1,31 @@
 <!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hậu Cung AI</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Hậu Cung AI</title><link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <div class="app-shell">
-    <header class="topbar">
-      <div>
-        <span class="eyebrow">AI ROLEPLAY • MVP</span>
-        <h1>Hậu Cung</h1>
-      </div>
-      <button id="resetBtn" class="ghost-btn">Chơi lại</button>
-    </header>
-
-    <main class="game-grid">
-      <aside class="panel character-panel">
-        <div class="portrait">慕</div>
-        <h2>Mộ Dung Yên</h2>
-        <p class="muted">Mộ Dung gia · Văn thư · Điềm tĩnh, quan sát</p>
-        <div class="status-badge">Đang trò chuyện</div>
-
-        <div class="stats" id="stats"></div>
-
-        <div class="section-title">Trạng thái</div>
-        <div id="stateTags" class="tags"></div>
-      </aside>
-
-      <section class="panel scene-panel">
-        <div class="scene-head">
-          <div>
-            <span class="eyebrow">THƯ PHÒNG · ĐÊM</span>
-            <h2 id="sceneTitle">Một cuộc trò chuyện riêng</h2>
-          </div>
-          <span class="turn" id="turnLabel">Lượt 1</span>
-        </div>
-
-        <div id="chatLog" class="chat-log"></div>
-
-        <div class="card-section">
-          <div class="section-title">Chọn thẻ hành động</div>
-          <div id="cardGrid" class="card-grid"></div>
-        </div>
-
-        <form id="actionForm" class="composer">
-          <textarea id="actionInput" rows="3" placeholder="Viết điều bệ hạ muốn làm hoặc nói..."></textarea>
-          <div class="composer-row">
-            <span id="selectedCard" class="selected-card">Chưa chọn thẻ</span>
-            <button class="primary-btn" type="submit">Để AI phân tích →</button>
-          </div>
-        </form>
-      </section>
-
-      <aside class="panel result-panel">
-        <div class="section-title">AI phân tích</div>
-        <div id="analysis" class="analysis empty">Kết quả lượt chơi sẽ xuất hiện ở đây.</div>
-
-        <div class="section-title history-title">Lịch sử</div>
-        <div id="history" class="history"></div>
-      </aside>
-    </main>
-  </div>
-  <script src="config.js"></script>
-  <script src="characters.js"></script>
-  <script src="memory.js"></script>
-  <script src="app.js"></script>
-</body>
-</html>
+<div class="app-shell">
+<header class="topbar"><div><span class="eyebrow">AI ROLEPLAY • HẬU CUNG</span><h1>Hậu Cung</h1></div>
+<div class="top-actions"><button id="haremBtn" class="gold-btn">Hậu cung</button><button id="resetBtn" class="ghost-btn">Chơi lại</button></div></header>
+<section id="characterSelect" class="character-select">
+<div class="select-heading"><div><span class="eyebrow">HẬU CUNG</span><h2>Chọn một nàng để gặp</h2><p>20 nhân vật có hồ sơ, chỉ số, ký ức và quan hệ riêng. Những người đang giữ chức vụ sẽ có huy hiệu và khung riêng.</p></div></div>
+<div id="characterGrid" class="character-grid"></div>
+</section>
+<main id="gameView" class="game-grid hidden">
+<aside class="panel character-panel">
+<div id="portrait" class="portrait">慕</div><h2 id="characterName">Mộ Dung Yên</h2><p id="characterMeta" class="muted"></p><div id="statusBadge" class="status-badge">Đang trò chuyện</div>
+<div class="rank-box"><div><span class="section-title compact">Phẩm vị</span><strong id="currentRank">Tú nữ</strong></div><button id="promoteBtn" class="small-gold-btn">Phong tước</button></div>
+<div class="stats" id="stats"></div><div class="section-title">Trạng thái</div><div id="stateTags" class="tags"></div>
+</aside>
+<section class="panel scene-panel">
+<div class="scene-head"><div><span class="eyebrow" id="sceneEyebrow">THƯ PHÒNG · ĐÊM</span><h2 id="sceneTitle">Một cuộc trò chuyện riêng</h2></div><span class="turn" id="turnLabel">Lượt 1</span></div>
+<div id="chatLog" class="chat-log"></div>
+<div class="card-section"><div class="section-title">Chọn thẻ hành động</div><div id="cardGrid" class="card-grid"></div></div>
+<form id="actionForm" class="composer"><textarea id="actionInput" rows="3" placeholder="Viết điều bệ hạ muốn làm hoặc nói..."></textarea><div class="composer-row"><span id="selectedCard" class="selected-card">Chưa chọn thẻ</span><button class="primary-btn" type="submit">Để AI phân tích →</button></div></form>
+</section>
+<aside class="panel result-panel"><div class="section-title">AI phân tích</div><div id="analysis" class="analysis empty">Kết quả lượt chơi sẽ xuất hiện ở đây.</div><div class="section-title history-title">Lịch sử</div><div id="history" class="history"></div></aside>
+</main></div>
+<div id="rankModal" class="modal hidden"><div class="modal-card"><button id="closeRankModal" class="modal-close">×</button><span class="eyebrow">SẮC PHONG</span><h2 id="rankModalTitle">Phong tước</h2><p id="rankModalDesc" class="muted">Chọn phẩm vị muốn ban.</p><div id="rankOptions" class="rank-options"></div></div></div>
+<script src="config.js"></script><script src="characters.js"></script><script src="memory.js"></script><script src="app.js"></script>
+</body></html>
